@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 import pandas as pd
 import io
+import numpy as np
 
 from app.data_loader import load_dataframe_from_file
 from app.query_engine import query_dataframe
@@ -135,7 +136,21 @@ async def upload_data_file(file: UploadFile = File(...) ):
     try:
         df = await load_dataframe_from_file(file)
         session_id = session_manager.create_dataframe_session(df, file.filename)
-        preview_data = df.head().to_dict(orient='records')
+        
+        # Obter preview e tratar valores não finitos explicitamente
+        preview_data_raw = df.head().to_dict(orient='records')
+        
+        # Limpar dados de preview para garantir compatibilidade com JSON
+        preview_data_cleaned = []
+        for row in preview_data_raw:
+            cleaned_row = {}
+            for key, value in row.items():
+                if isinstance(value, float) and (np.isnan(value) or np.isinf(value)):
+                    cleaned_row[key] = None
+                else:
+                    cleaned_row[key] = value
+            preview_data_cleaned.append(cleaned_row)
+
         columns = list(df.columns)
         print(f"Arquivo {file.filename} carregado. Session ID: {session_id}")
         return {
@@ -143,7 +158,7 @@ async def upload_data_file(file: UploadFile = File(...) ):
             "session_id": session_id,
             "filename": file.filename,
             "columns": columns,
-            "preview": preview_data,
+            "preview": preview_data_cleaned, # Usar dados limpos
             "data_type": "dataframe"
         }
     except ValueError as e:
