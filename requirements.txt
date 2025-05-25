@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+llama-index
+llama-index-llms-openai
+llama-index-readers-file
+llama-index-readers-database
+pandas
+openpyxl
+python-dotenv
+sqlalchemy
+fpdf2
+pyarrow
+python-multipart
