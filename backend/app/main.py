@@ -19,6 +19,11 @@ from app.db_connector import get_sqlite_engine, get_db_tables_and_preview, creat
 # Carregar variáveis de ambiente
 load_dotenv()
 
+# --- DEBUG: Verificar se a chave da API OpenAI foi carregada ---
+import os
+print(f"DEBUG: OPENAI_API_KEY carregada: {os.getenv('OPENAI_API_KEY') is not None}")
+# --------------------------------------------------------------
+
 # Adicionando prefixo /api para todos os endpoints do backend
 app = FastAPI(title="API de Análise de Dados com IA", prefix="/api")
 

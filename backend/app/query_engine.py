@@ -2,27 +2,10 @@
 
 import os
 import pandas as pd
-from llama_index.core.query_engine import PandasQueryEngine
+from llama_index.experimental.query_engine import PandasQueryEngine
 from llama_index.llms.openai import OpenAI
 from llama_index.core import Settings
 from fastapi import HTTPException
-
-# Configurar LLM globalmente ou passar como argumento
-# Certifique-se que a variável OPENAI_API_KEY está no .env
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    print("AVISO: Chave da API OpenAI não encontrada nas variáveis de ambiente.")
-    # Poderia lançar um erro aqui ou ter um comportamento padrão
-    # raise ValueError("OPENAI_API_KEY não configurada.")
-    llm = None # Ou um LLM mock/padrão se aplicável
-else:
-    try:
-        llm = OpenAI(model="gpt-3.5-turbo", api_key=api_key)
-        # Configuração global (opcional, pode ser feito por request)
-        # Settings.llm = llm 
-    except Exception as e:
-        print(f"Erro ao inicializar OpenAI LLM: {e}")
-        llm = None
 
 def query_dataframe(df: pd.DataFrame, question: str):
     """
@@ -40,9 +23,18 @@ def query_dataframe(df: pd.DataFrame, question: str):
     Raises:
         HTTPException: Se ocorrer um erro durante a consulta.
     """
-    if llm is None:
-        # return "LLM não configurado. Verifique a chave da API OpenAI.", None
+    # Obter a chave da API e inicializar o LLM dentro da função
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("AVISO: Chave da API OpenAI não encontrada nas variáveis de ambiente.")
         raise HTTPException(status_code=500, detail="LLM não configurado. Verifique a chave da API OpenAI.")
+
+    try:
+        llm = OpenAI(model="gpt-4o", api_key=api_key)
+        # Settings.llm = llm # Configuração global (opcional)
+    except Exception as e:
+        print(f"Erro ao inicializar OpenAI LLM: {e}")
+        raise HTTPException(status_code=500, detail=f"Erro ao inicializar LLM: {e}")
 
     if df is None or df.empty:
         raise HTTPException(status_code=400, detail="Nenhum dado carregado para consulta.")
