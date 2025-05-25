@@ -1,37 +1,73 @@
 # data-analysis-AI
-Analisa dados de tabelas e banco de dados usando llm (IA)
 
-# API de Análise de Dados com IA
+Projeto fullstack para análise de dados de tabelas e bancos de dados usando LLM (IA generativa).
 
-Este projeto é um backend desenvolvido em FastAPI para análise de dados utilizando inteligência artificial. Ele permite:
-
+## Funcionalidades
 - Upload de arquivos de dados (CSV, Excel, JSON, Parquet)
 - Conexão com bancos de dados SQLite
 - Execução de perguntas em linguagem natural sobre os dados (DataFrame ou banco de dados)
 - Geração de relatórios em PDF com base nas interações
+- Interface web moderna (React + Vite + TypeScript)
 
-Principais tecnologias e bibliotecas:
-- FastAPI
-- SQLAlchemy
-- Pandas
-- LlamaIndex (integração com LLMs)
-- OpenAI API
-- fpdf2
-
-O backend expõe endpoints REST para upload, consulta, conexão com banco de dados e geração de relatórios. O gerenciamento de sessões é feito em memória (não recomendado para produção).
+## Estrutura do Projeto
+```
+backend/
+  app/
+    main.py
+    data_loader.py
+    db_connector.py
+    query_engine.py
+    pdf_generator.py
+  requirements.txt
+  .env
+frontend/
+  package.json
+  src/
+    App.tsx
+    components/
+    hooks/
+    lib/
+    ui/
+```
 
 ## Como executar
 
+### 1. Backend (FastAPI)
+
 1. Instale as dependências:
    ```bash
+   cd backend
    pip install -r requirements.txt
    ```
-2. Inicie o servidor:
-   ```bash
-   uvicorn main:app --reload --host 0.0.0.0 --port 8000
+2. Configure o arquivo `.env` com sua chave da OpenAI:
+   ```env
+   OPENAI_API_KEY=sk-...
    ```
-3. Acesse a documentação automática em: http://localhost:8000/docs
+3. Inicie o servidor:
+   ```bash
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+4. Acesse a documentação automática em: http://localhost:8000/docs
+
+### 2. Frontend (Vite + React)
+
+1. Instale as dependências (resolvendo conflitos):
+   ```bash
+   cd frontend
+   npm install --legacy-peer-deps
+   ```
+2. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+3. Acesse: http://localhost:5173
 
 ## Observações
-- É necessário definir a variável de ambiente `OPENAI_API_KEY` no arquivo `.env` para uso das funcionalidades de IA.
-- Para produção, recomenda-se usar um sistema de gerenciamento de sessões persistente (ex: Redis).
+- O backend faz gerenciamento de sessões em memória (não recomendado para produção).
+- O arquivo `.env` **NÃO deve ser versionado**. Use `.env.example` para compartilhar variáveis necessárias.
+- Se houver conflitos de dependências no frontend, use `--legacy-peer-deps`.
+- Para produção, utilize um sistema de sessões persistente (ex: Redis) e proteja suas chaves de API.
+
+---
+
+Desenvolvido por [Seu Nome].
