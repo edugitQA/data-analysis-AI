@@ -1,5 +1,5 @@
 // Ajuste no App.tsx para corrigir a URL da API para o domínio público
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Database, FileUp, MessageSquare } from 'lucide-react';
