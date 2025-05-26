@@ -65,6 +65,7 @@ function App() {
     setCurrentCode(null);
     setSelectedForReport([]);
     setActiveTab('chat');
+    console.log('activeTab after file upload:', 'chat'); // Adicionado log
   };
 
   // Manipuladores de eventos para conexão com banco de dados
@@ -166,7 +167,7 @@ function App() {
   }, [dataType, activeTable, dbPreviews]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col p-4">
       <header className="bg-white border-b py-4 px-6">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold text-primary">Analisando os dados 🔍 🎲</h1>

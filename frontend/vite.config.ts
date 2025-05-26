@@ -18,8 +18,6 @@ export default defineConfig({
     host: '0.0.0.0',
     cors: true,
     allowedHosts: [
-      '5173-ig5pxrzl6nxv1q1c07urp-bc096365.manusvm.computer',
-      'ig5pxrzl6nxv1q1c07urp-bc096365.manusvm.computer',
       'localhost',
       '127.0.0.1'
     ],
