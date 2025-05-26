@@ -1,13 +1,13 @@
 fastapi
-uvicorn
+uvicorn[standard]
+llama-index
+llama-index-llms-openai
+llama-index-readers-file
+llama-index-readers-database
 pandas
+openpyxl
 python-dotenv
 sqlalchemy
-pydantic
 fpdf2
-openai
-llama-index==0.12.37
-llama-index-experimental==0.3.1
-llama-index-llms-openai==0.3.44
-
-# Outras dependências necessárias
+pyarrow
+python-multipart
