@@ -70,4 +70,4 @@ frontend/
 
 ---
 
-Desenvolvido por [Seu Nome].
+Desenvolvido por Eduardo Alves.
