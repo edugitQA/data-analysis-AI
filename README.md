@@ -1,33 +1,51 @@
 # data-analysis-AI
 
-Projeto fullstack para análise de dados de tabelas e bancos de dados usando LLM (IA generativa).
+Projeto fullstack para análise de dados de tabelas e bancos de dados usando LLM (IA generativa) com foco em segurança e interface moderna.
 
 ## Funcionalidades
+
+### Análise de Dados
 - Upload de arquivos de dados (CSV, Excel, JSON, Parquet)
-- Conexão com bancos de dados SQLite
-- Execução de perguntas em linguagem natural sobre os dados (DataFrame ou banco de dados)
+- Conexão segura com bancos de dados SQLite
+- Execução de perguntas em linguagem natural sobre os dados
+- Respostas formatadas com emojis e layout amigável
 - Geração de relatórios em PDF com base nas interações
-- Interface web moderna (React + Vite + TypeScript)
+
+### Segurança
+- Proteção contra SQL injection
+- Sanitização de inputs e queries
+- Validação de nomes de tabelas e campos
+- Limitação de operações permitidas (apenas SELECT)
+- Timeout e reciclagem de conexões
+- Logging detalhado de operações
+
+### Interface
+- Frontend moderno com React + Vite + TypeScript
+- Componentes UI reutilizáveis com Tailwind
+- Design responsivo e acessível
+- Previews de dados tabulares
+- Feedback visual de operações
 
 ## Estrutura do Projeto
 ```
 backend/
   app/
-    main.py
-    data_loader.py
-    db_connector.py
-    query_engine.py
-    pdf_generator.py
+    ai_agents.py         # Gerenciamento de agentes IA
+    data_loader.py       # Carregamento de dados
+    database_security.py # Segurança do banco
+    enhanced_query_engine.py # Motor de consultas avançado
+    main.py             # API principal
+    pdf_generator.py    # Geração de PDFs
+    query_engine.py     # Motor de consultas base
+    security.py         # Funcionalidades de segurança
   requirements.txt
-  .env
+  .env.example
 frontend/
-  package.json
   src/
-    App.tsx
-    components/
-    hooks/
-    lib/
-    ui/
+    components/         # Componentes React
+      ui/              # Componentes UI base
+    hooks/             # Hooks customizados
+    lib/               # Utilitários
 ```
 
 ## Como executar
@@ -39,9 +57,11 @@ frontend/
    cd backend
    pip install -r requirements.txt
    ```
-2. Configure o arquivo `.env` com sua chave da OpenAI:
+2. Configure o arquivo `.env` baseado no `.env.example`:
    ```env
    OPENAI_API_KEY=sk-...
+   MAX_ROWS_PREVIEW=100
+   LOG_LEVEL=INFO
    ```
 3. Inicie o servidor:
    ```bash
@@ -51,22 +71,42 @@ frontend/
 
 ### 2. Frontend (Vite + React)
 
-1. Instale as dependências (resolvendo conflitos):
+1. Instale as dependências:
    ```bash
    cd frontend
-   npm install --legacy-peer-deps
+   pnpm install
    ```
 2. Inicie o servidor de desenvolvimento:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 3. Acesse: http://localhost:5173
 
+## Segurança
+
+O projeto implementa várias camadas de segurança:
+
+- **Sanitização de Inputs**: Validação rigorosa de todos os inputs do usuário
+- **Proteção SQL**: 
+  - Bloqueio de operações perigosas (DROP, DELETE, etc)
+  - Limitação a queries SELECT
+  - Validação de nomes de tabelas e campos
+- **Conexões**: 
+  - Timeout de 30 segundos
+  - Reciclagem de conexões a cada hora
+  - Pool de conexões com health check
+- **Logging**: Registro detalhado de todas as operações e erros
+
 ## Observações
-- O backend faz gerenciamento de sessões em memória (não recomendado para produção).
-- O arquivo `.env` **NÃO deve ser versionado**. Use `.env.example` para compartilhar variáveis necessárias.
-- Se houver conflitos de dependências no frontend, use `--legacy-peer-deps`.
-- Para produção, utilize um sistema de sessões persistente (ex: Redis) e proteja suas chaves de API.
+- Utilize sempre o `.env.example` como base para criar seu `.env`
+- O sistema de logging registra operações em `ai_responses.log`
+- Preferência por pnpm no frontend para melhor gestão de dependências
+- Para produção, recomenda-se:
+  - Sistema de sessões persistente (ex: Redis)
+  - Proteção adicional das chaves de API
+  - Configuração de CORS apropriada
+  - Rate limiting nas APIs
+  - Monitoramento dos logs
 
 ---
 
