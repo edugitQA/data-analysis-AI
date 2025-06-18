@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import pandas as pd
 import io
 import numpy as np
+from typing import Optional, Dict, Any
 
 from app.data_loader import load_dataframe_from_file
 from app.query_engine import query_dataframe
@@ -131,6 +132,12 @@ class DBConnectionRequest(BaseModel):
     db_path: str = Field(..., description="Caminho para o arquivo do banco de dados SQLite.")
     # Adicionar campos para outros tipos de BD (host, port, user, password, db_name) depois
 
+# Atualizar o modelo de resposta para incluir SQL
+class QueryResponse(BaseModel):
+    answer: str
+    generated_code: Optional[str] = None
+    sql_equivalent: Optional[str] = None
+
 # --- Endpoints ---
 
 @app.post("/upload", summary="Upload de arquivo de dados (CSV, Excel, JSON, Parquet)")
@@ -204,31 +211,35 @@ async def connect_database(request: DBConnectionRequest):
         print(f"Erro inesperado ao conectar ao BD: {e}")
         raise HTTPException(status_code=500, detail=f"Erro interno ao conectar ao banco de dados: {e}")
 
-@app.post("/query", summary="Executa uma pergunta sobre os dados carregados (DataFrame ou DB)")
+@app.post("/query", summary="Executa uma pergunta sobre os dados carregados")
 async def execute_query(request: QueryRequest):
     print(f"Recebida query para sessão {request.session_id}: {request.question[:50]}...")
     try:
         session_data = session_manager.get_session_data(request.session_id)
         answer = None
         generated_code = None
+        sql_equivalent = None
 
         if session_data["type"] == "dataframe":
             df = session_data["dataframe"]
-            # PandasQueryEngine é criado a cada chamada aqui
-            answer, generated_code = query_dataframe(df, request.question)
+            answer, generated_code, sql_equivalent = query_dataframe(df, request.question)
         elif session_data["type"] == "database":
-            # Obtém ou cria o query engine SQL para a sessão
             sql_query_engine = session_manager.get_query_engine(request.session_id)
-            if sql_query_engine is None: # Deve ter sido criado no get_query_engine
-                 raise HTTPException(status_code=500, detail="Falha ao obter o motor de consulta SQL.")
+            if sql_query_engine is None:
+                raise HTTPException(status_code=500, detail="Falha ao obter o motor de consulta SQL.")
             answer, generated_code = query_database_engine(sql_query_engine, request.question)
         else:
-             raise HTTPException(status_code=400, detail="Tipo de sessão inválida para consulta.")
+            raise HTTPException(status_code=400, detail="Tipo de sessão inválida para consulta.")
 
         # Adicionar ao histórico
         session_manager.add_history(request.session_id, request.question, answer, generated_code)
         print(f"Consulta para sessão {request.session_id} respondida.")
-        return {"answer": answer, "generated_code": generated_code}
+        
+        return {
+            "answer": answer,
+            "generated_code": generated_code,
+            "sql_equivalent": sql_equivalent
+        }
 
     except HTTPException as http_exc:
         raise http_exc
