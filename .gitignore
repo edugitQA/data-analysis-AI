@@ -4,19 +4,83 @@ __pycache__/
 *.pyo
 *.pyd
 *.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
 *.egg-info/
+.installed.cfg
+*.egg
 .venv/
 venv/
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# VSCode
-.vscode/
+# Node/React
+node_modules/
+.npm
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+dist-ssr/
+*.local
+.cache
+.next
+.nuxt
+.out
+.output
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# IDE - JetBrains
+.idea/
+*.iml
+*.iws
+.idea_modules/
 
 # Jupyter
 .ipynb_checkpoints/
 
-# Outros
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dados e Arquivos Gerados
 *.sqlite3
 *.db
-*.log
 *.pdf
+coverage/
+.coverage
+htmlcov/
+.DS_Store
+*.pem
+
+# Build e Deploy
+.vercel
+.netlify
+.env*.local
